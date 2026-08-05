@@ -13,11 +13,15 @@ export const createJob = async (
     deadline?: Date;
   }
 ) => {
+  console.log("Logged User ID:", userId);
+
   const recruiter = await prisma.recruiterProfile.findUnique({
     where: {
       userId,
     },
   });
+
+  console.log("Recruiter Profile:", recruiter);
 
   if (!recruiter) {
     throw new Error("Recruiter profile not found");

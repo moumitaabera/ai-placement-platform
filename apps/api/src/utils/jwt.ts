@@ -6,7 +6,7 @@ export const generateAccessToken = (id: string) => {
     { id },
     env.JWT_SECRET,
     {
-      expiresIn: "15m",
+      expiresIn: "1d",
     }
   );
 };
@@ -16,7 +16,7 @@ export const generateRefreshToken = (id: string) => {
     { id },
     process.env.JWT_REFRESH_SECRET!,
     {
-      expiresIn: "7d",
+      expiresIn: "1d",
     }
   );
 };

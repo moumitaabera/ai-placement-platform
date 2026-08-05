@@ -21,7 +21,7 @@ router.get(
   getJob
 );
 
-export default router;
+
 
 router.patch(
   "/:id",
@@ -34,3 +34,4 @@ router.delete(
   authenticate,
   remove
 );
+export default router;

@@ -34,12 +34,21 @@ export const create = async (
       message: "Job created successfully",
       data: job,
     });
-  } catch (error: any) {
-    res.status(400).json({
+  } catch (error: unknown) {
+  console.error("CREATE JOB ERROR:", error);
+
+  if (error instanceof Error) {
+    return res.status(400).json({
       success: false,
       message: error.message,
     });
   }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+}
 };
 export const getJobs = async (
   req: Request,

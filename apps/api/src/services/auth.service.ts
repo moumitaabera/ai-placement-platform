@@ -27,21 +27,33 @@ export const registerUser = async (
   const hashedPassword = await hashPassword(password);
 
   const user = await prisma.user.create({
-  data: {
-    name,
-    email,
-    password: hashedPassword,
-    role,
-  },
-});
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+
+      studentProfile:
+        role === "STUDENT"
+          ? {
+              create: {},
+            }
+          : undefined,
+
+      recruiterProfile:
+        role === "RECRUITER"
+          ? {
+              create: {},
+            }
+          : undefined,
+    },
+  });
 
   const { password: _, ...safeUser } = user;
 
-return safeUser;
-
-
-  
+  return safeUser;
 };
+
 
 export const loginUser = async (
   email: string,
@@ -52,6 +64,12 @@ export const loginUser = async (
       email,
     },
   });
+  console.log("LOGIN USER:");
+console.log({
+  id: user?.id,
+  email: user?.email,
+  role: user?.role,
+});
 
   if (!user || !user.password) {
     throw new Error("Invalid credentials");
