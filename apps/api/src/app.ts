@@ -23,6 +23,9 @@ import recruiterRoutes from "./routes/recruiter.routes";
 
 
 const app = express();
+
+app.set("trust proxy", 1);
+
 app.use(
   pinoHttp({
     logger,
