@@ -48,3 +48,330 @@ export const deleteResume = async (
 
   return resume;
 };
+// export const getResumeForUser = async (
+//   userId: string,
+//   resumeId: string
+// ) => {
+//   console.log("===== VIEW RESUME DEBUG =====");
+//   console.log("userId:", userId);
+//   console.log("resumeId:", resumeId);
+//   // Check if the user is a student
+//   const student = await prisma.studentProfile.findUnique({
+//     where: {
+//       userId,
+//     },
+//   });
+//    console.log("student:", student);
+
+//   if (student) {
+//      console.log("USER IDENTIFIED AS STUDENT");
+//     const resume = await prisma.resume.findFirst({
+//       where: {
+//         id: resumeId,
+//         studentId: student.id,
+//       },
+//     });
+//     console.log("student resume:", resume);
+
+//     if (!resume) {
+//       throw new Error("Resume not found");
+//     }
+
+//     return resume;
+//   }
+
+//   // Check if the user is a recruiter
+//   const recruiter =
+//     await prisma.recruiterProfile.findUnique({
+//       where: {
+//         userId,
+//       },
+//     });
+//     console.log("recruiter:", recruiter);
+
+
+//   if (recruiter) {
+//     console.log("USER IDENTIFIED AS RECRUITER");
+//     const application =
+//       await prisma.application.findFirst({
+//         where: {
+//           resumeId,
+//           job: {
+//             recruiterId: recruiter.id,
+//           },
+//         },
+//         include: {
+//           resume: true,
+//         },
+//       });
+//       console.log("application:", application);
+
+
+//     if (!application) {
+//       throw new Error("Unauthorized");
+//     }
+
+//     return application.resume;
+//   }
+//   console.log("USER IS NEITHER STUDENT NOR RECRUITER");
+
+//   throw new Error("Unauthorized");
+// };
+
+
+
+
+// export const getResumeForUser = async (
+//   userId: string,
+//   resumeId: string,
+//   role: "STUDENT" | "RECRUITER" | "ADMIN"
+// ) => {
+//   console.log("===== VIEW RESUME DEBUG =====");
+//   console.log("userId:", userId);
+//   console.log("resumeId:", resumeId);
+//   console.log("role:", role);
+
+//   /*
+//    * =========================
+//    * STUDENT
+//    * =========================
+//    */
+
+//   if (role === "STUDENT") {
+//     const student =
+//       await prisma.studentProfile.findUnique({
+//         where: {
+//           userId,
+//         },
+//       });
+
+//     if (!student) {
+//       throw new Error(
+//         "Student profile not found"
+//       );
+//     }
+
+//     const resume =
+//       await prisma.resume.findFirst({
+//         where: {
+//           id: resumeId,
+//           studentId: student.id,
+//         },
+//       });
+
+//     if (!resume) {
+//       throw new Error("Unauthorized");
+//     }
+
+//     return resume;
+//   }
+
+//   /*
+//    * =========================
+//    * RECRUITER
+//    * =========================
+//    */
+
+//   if (role === "RECRUITER") {
+//     const recruiter =
+//       await prisma.recruiterProfile.findUnique({
+//         where: {
+//           userId,
+//         },
+//       });
+
+//     if (!recruiter) {
+//       throw new Error(
+//         "Recruiter profile not found"
+//       );
+//     }
+
+//     /*
+//      * Resume must belong to an applicant
+//      * who applied to THIS recruiter's job.
+//      */
+
+//     const application =
+//       await prisma.application.findFirst({
+//         where: {
+//           resumeId,
+
+//           job: {
+//             recruiterId: recruiter.id,
+//           },
+//         },
+
+//         include: {
+//           resume: true,
+//         },
+//       });
+
+//     if (!application) {
+//       throw new Error("Unauthorized");
+//     }
+
+//     return application.resume;
+//   }
+
+//   /*
+//    * =========================
+//    * ADMIN
+//    * =========================
+//    */
+
+//   if (role === "ADMIN") {
+//     const resume =
+//       await prisma.resume.findUnique({
+//         where: {
+//           id: resumeId,
+//         },
+//       });
+
+//     if (!resume) {
+//       throw new Error("Resume not found");
+//     }
+
+//     return resume;
+//   }
+
+//   throw new Error("Unauthorized");
+// };
+
+type UserRole = "STUDENT" | "RECRUITER" | "ADMIN";
+
+export const getResumeForUser = async (
+  userId: string,
+  resumeId: string,
+  applicationId?: string,
+  userRole?: UserRole
+) => {
+  console.log("===== VIEW RESUME AUTHORIZATION =====");
+  console.log("userId:", userId);
+  console.log("resumeId:", resumeId);
+  console.log("applicationId:", applicationId);
+  console.log("userRole:", userRole);
+
+  // ==================================================
+  // 1. STUDENT
+  // Student can ONLY view their own resume
+  // ==================================================
+
+  if (userRole === "STUDENT") {
+    const student = await prisma.studentProfile.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!student) {
+      throw new Error("Student profile not found");
+    }
+
+    const resume = await prisma.resume.findFirst({
+      where: {
+        id: resumeId,
+        studentId: student.id,
+      },
+    });
+
+    if (!resume) {
+      throw new Error("Resume not found");
+    }
+
+    console.log("STUDENT AUTHORIZED");
+
+    return resume;
+  }
+
+  // ==================================================
+  // 2. RECRUITER
+  // Recruiter can ONLY view resumes of applicants
+  // belonging to THEIR OWN JOB
+  // ==================================================
+
+  if (userRole === "RECRUITER") {
+    const recruiter = await prisma.recruiterProfile.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!recruiter) {
+      throw new Error("Recruiter profile not found");
+    }
+
+    if (!applicationId) {
+      console.log("RECRUITER DID NOT PROVIDE APPLICATION ID");
+      throw new Error("Unauthorized");
+    }
+
+    const application = await prisma.application.findUnique({
+      where: {
+        id: applicationId,
+      },
+      include: {
+        job: true,
+        resume: true,
+      },
+    });
+
+    if (!application) {
+      console.log("APPLICATION NOT FOUND");
+      throw new Error("Unauthorized");
+    }
+
+    console.log("APPLICATION AUTHORIZATION CHECK:", {
+      applicationId: application.id,
+      applicationResumeId: application.resumeId,
+      requestedResumeId: resumeId,
+      applicationJobId: application.jobId,
+      jobRecruiterId: application.job.recruiterId,
+      loggedInRecruiterId: recruiter.id,
+    });
+
+    // Resume must belong to this application
+    if (application.resumeId !== resumeId) {
+      console.log("RESUME DOES NOT BELONG TO APPLICATION");
+      throw new Error("Unauthorized");
+    }
+
+    // Job must belong to logged-in recruiter
+    if (application.job.recruiterId !== recruiter.id) {
+      console.log("RECRUITER DOES NOT OWN THIS JOB");
+      throw new Error("Unauthorized");
+    }
+
+    console.log("RECRUITER AUTHORIZED");
+
+    return application.resume;
+  }
+
+  // ==================================================
+  // 3. ADMIN
+  // Admin can view any resume
+  // ==================================================
+
+  if (userRole === "ADMIN") {
+    const resume = await prisma.resume.findUnique({
+      where: {
+        id: resumeId,
+      },
+    });
+
+    if (!resume) {
+      throw new Error("Resume not found");
+    }
+
+    console.log("ADMIN AUTHORIZED");
+
+    return resume;
+  }
+
+  // ==================================================
+  // 4. Unknown / missing role
+  // ==================================================
+
+  console.log("INVALID OR MISSING USER ROLE");
+
+  throw new Error("Unauthorized");
+};

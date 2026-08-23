@@ -3,7 +3,9 @@ import prisma from "../lib/prisma";
 export const getNotifications = async (
   userId: string
 ) => {
-  return prisma.notification.findMany({
+  console.log("GET NOTIFICATIONS USER ID:", userId);
+
+  const notifications = await prisma.notification.findMany({
     where: {
       userId,
     },
@@ -11,6 +13,10 @@ export const getNotifications = async (
       createdAt: "desc",
     },
   });
+
+  console.log("FOUND NOTIFICATIONS:", notifications);
+
+  return notifications;
 };
 
 export const markNotificationAsRead = async (

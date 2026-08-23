@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getJobs } from "@/services/job.service";
 import { Job } from "@/types/job";
+import Link from "next/link";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -70,6 +71,12 @@ export default function JobsPage() {
                 <p>💼 {job.employmentType}</p>
                 <p>🎯 {job.experienceLevel}</p>
                 <p>💰 {job.salary || "Not disclosed"}</p>
+                {job.deadline && (
+    <p>
+      📅 Application Deadline:{" "}
+      {new Date(job.deadline).toLocaleDateString()}
+    </p>
+  )}
               </div>
 
               <div className="flex flex-wrap gap-2 mt-4">
@@ -82,6 +89,14 @@ export default function JobsPage() {
                   </span>
                 ))}
               </div>
+              <div className="mt-5">
+  <Link
+    href={`/dashboard/jobs/${job.id}`}
+    className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+  >
+    View Details
+  </Link>
+</div>
             </div>
           ))}
         </div>

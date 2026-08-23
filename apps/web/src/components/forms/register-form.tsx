@@ -1,11 +1,15 @@
 "use client";
+import axios from "axios";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { register } from "@/services/auth.service";
 import { RegisterData } from "@/types/auth";
 import { Button } from "@/components/ui/button";
 
 export default function RegisterForm() {
+  const router = useRouter();
+
   const [form, setForm] = useState<RegisterData>({
     name: "",
     email: "",
@@ -35,10 +39,23 @@ export default function RegisterForm() {
       console.log(result);
 
       alert("Registration successful!");
-    } catch (error) {
-      console.error(error);
-      alert("Registration failed!");
-    } finally {
+
+      router.push("/login");
+    } catch (error: unknown) {
+  console.error("Registration error:", error);
+
+  if (axios.isAxiosError(error)) {
+    console.error("Backend response:", error.response?.data);
+
+    alert(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Registration failed!"
+    );
+  } else {
+    alert("Registration failed!");
+  }
+}finally {
       setLoading(false);
     }
   };
@@ -53,6 +70,7 @@ export default function RegisterForm() {
         placeholder="Full Name"
         value={form.name}
         onChange={handleChange}
+        required
         className="w-full border rounded-lg p-3"
       />
 
@@ -62,6 +80,7 @@ export default function RegisterForm() {
         placeholder="Email"
         value={form.email}
         onChange={handleChange}
+        required
         className="w-full border rounded-lg p-3"
       />
 
@@ -71,6 +90,7 @@ export default function RegisterForm() {
         placeholder="Password"
         value={form.password}
         onChange={handleChange}
+        required
         className="w-full border rounded-lg p-3"
       />
 

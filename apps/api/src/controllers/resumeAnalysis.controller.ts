@@ -1,9 +1,9 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { analyzeResume } from "../services/resumeAnalysis.service";
+import { analyzeResume, getResumeAnalysis, } from "../services/resumeAnalysis.service";
 
 export const analyzeMyResume = async (
-  req: AuthRequest,
+  req: AuthRequest, 
   res: Response
 ) => {
   try {
@@ -21,6 +21,29 @@ export const analyzeMyResume = async (
     });
   } catch (error: any) {
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+export const getMyResumeAnalysis = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  try {
+    const { resumeId } = req.params;
+
+    const analysis = await getResumeAnalysis(
+      req.userId!,
+      resumeId as string
+    );
+
+    res.status(200).json({
+      success: true,
+      data: analysis,
+    });
+  } catch (error: any) {
+    res.status(404).json({
       success: false,
       message: error.message,
     });

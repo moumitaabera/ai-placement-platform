@@ -64,12 +64,12 @@ export const loginUser = async (
       email,
     },
   });
-  console.log("LOGIN USER:");
-console.log({
-  id: user?.id,
-  email: user?.email,
-  role: user?.role,
-});
+//   console.log("LOGIN USER:");
+// console.log({
+//   id: user?.id,
+//   email: user?.email,
+//   role: user?.role,
+// });
 
   if (!user || !user.password) {
     throw new Error("Invalid credentials");
@@ -84,7 +84,7 @@ console.log({
     throw new Error("Invalid credentials");
   }
 
-  const accessToken = generateAccessToken(user.id);
+  const accessToken = generateAccessToken(user.id, user.role);
 
 const refreshToken = generateRefreshToken(user.id);
 
@@ -125,7 +125,23 @@ export const refreshAccessToken = async (
     process.env.JWT_REFRESH_SECRET!
   ) as { id: string };
 
-  const accessToken = generateAccessToken(payload.id);
+  const user = await prisma.user.findUnique({
+  where: {
+    id: payload.id,
+  },
+  select: {
+    role: true,
+  },
+});
+
+if (!user) {
+  throw new Error("User not found");
+}
+
+const accessToken = generateAccessToken(
+  payload.id,
+  user.role
+);
 
   return accessToken;
 };

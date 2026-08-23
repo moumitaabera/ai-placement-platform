@@ -8,6 +8,7 @@ import {
   getResumes,
   deleteResume,
   analyzeResume,
+  getResumeAnalysis,
 } from "@/services/resume.service";
 
 interface Resume {
@@ -40,29 +41,72 @@ export default function ResumeManager() {
     useState<string | null>(null);
 
   const loadResumes = async () => {
-    try {
-      const response = await getResumes();
+  try {
+    const response = await getResumes();
 
-      setResumes(response.data);
-    } catch (error) {
-      console.error(error);
+    const resumeList = response.data;
+
+    setResumes(resumeList);
+
+    // Load existing AI analysis
+    for (const resume of resumeList) {
+      try {
+        const analysisResponse =
+          await getResumeAnalysis(resume.id);
+
+        if (analysisResponse?.data) {
+          setAnalysis(analysisResponse.data);
+          break;
+        }
+      } catch {
+        // Analysis may not exist yet
+        continue;
+      }
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   useEffect(() => {
   let cancelled = false;
 
-  (async () => {
+  const fetchResumeData = async () => {
     try {
       const response = await getResumes();
 
-      if (!cancelled) {
-        setResumes(response.data);
+      if (cancelled) return;
+
+      const resumeList = response.data;
+
+      setResumes(resumeList);
+
+      for (const resume of resumeList) {
+        if (cancelled) return;
+
+        try {
+          const analysisResponse =
+            await getResumeAnalysis(resume.id);
+
+          if (
+            !cancelled &&
+            analysisResponse?.data
+          ) {
+            setAnalysis(analysisResponse.data);
+            break;
+          }
+        } catch {
+          // This resume may not have an analysis yet.
+        }
       }
     } catch (error) {
-      console.error(error);
+      if (!cancelled) {
+        console.error(error);
+      }
     }
-  })();
+  };
+
+  fetchResumeData();
 
   return () => {
     cancelled = true;
@@ -127,23 +171,88 @@ export default function ResumeManager() {
     }
   };
 
-  const handleAnalyze = async (resumeId: string) => {
-    try {
-      setAnalyzingId(resumeId);
+  const handleView = async (fileUrl: string) => {
+  try {
+    // Open a new tab immediately to avoid popup blocking
+    const newWindow = window.open("", "_blank");
 
-      const response = await analyzeResume(resumeId);
-
-      setAnalysis(response.data.data);
-
-      alert("Resume analyzed successfully!");
-    } catch (error) {
-      console.error(error);
-
-      alert("Analysis failed.");
-    } finally {
-      setAnalyzingId(null);
+    if (!newWindow) {
+      alert("Please allow pop-ups for this site.");
+      return;
     }
-  };
+
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>Resume</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 0;
+              overflow: hidden;
+            }
+
+            iframe {
+              width: 100vw;
+              height: 100vh;
+              border: none;
+            }
+          </style>
+        </head>
+        <body>
+          <p style="padding:20px;font-family:Arial;">
+            Loading resume...
+          </p>
+        </body>
+      </html>
+    `);
+
+    const response = await fetch(fileUrl);
+
+    if (!response.ok) {
+      throw new Error("Failed to load resume");
+    }
+
+    const blob = await response.blob();
+
+    // Force browser to treat it as PDF
+    const pdfBlob = new Blob([blob], {
+      type: "application/pdf",
+    });
+
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    newWindow.location.href = pdfUrl;
+
+    // Cleanup later
+    setTimeout(() => {
+      URL.revokeObjectURL(pdfUrl);
+    }, 60000);
+  } catch (error) {
+    console.error("Resume view error:", error);
+
+    alert("Unable to open resume.");
+  }
+};
+
+  const handleAnalyze = async (resumeId: string) => {
+  try {
+    setAnalyzingId(resumeId);
+
+    const response = await analyzeResume(resumeId);
+
+    console.log("AI ANALYSIS RESPONSE:", response);
+
+    setAnalysis(response.data);
+
+    alert("Resume analyzed successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Analysis failed.");
+  } finally {
+    setAnalyzingId(null);
+  }
+};
 
   return (
   <div className="space-y-6">
@@ -233,14 +342,12 @@ export default function ResumeManager() {
 
               <div className="flex gap-2">
 
-                <a
-                  href={resume.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                  View
-                </a>
+                <button
+  onClick={() => handleView(resume.fileUrl)}
+  className="bg-blue-600 text-white px-4 py-2 rounded"
+>
+  View
+</button>
 
                 <button
                   onClick={() => handleAnalyze(resume.id)}

@@ -1,12 +1,20 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 
-export const generateAccessToken = (id: string) => {
+type UserRole = "STUDENT" | "RECRUITER" | "ADMIN";
+
+export const generateAccessToken = (
+  id: string,
+  role: UserRole
+) => {
   return jwt.sign(
-    { id },
+    {
+      id,
+      role,
+    },
     env.JWT_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "15m",
     }
   );
 };
@@ -14,9 +22,9 @@ export const generateAccessToken = (id: string) => {
 export const generateRefreshToken = (id: string) => {
   return jwt.sign(
     { id },
-    process.env.JWT_REFRESH_SECRET!,
+    env.JWT_REFRESH_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "7d",
     }
   );
 };

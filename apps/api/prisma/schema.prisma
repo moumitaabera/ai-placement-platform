@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output = "../generated/prisma"
 }
 
 datasource db {
@@ -254,6 +254,10 @@ model InterviewSession {
 
   difficulty InterviewDifficulty @default(MEDIUM)
 
+  questions Json?
+
+  answers Json?
+
   startedAt DateTime @default(now())
 
   completedAt DateTime?
@@ -266,23 +270,19 @@ model InterviewSession {
 }
 
 model InterviewFeedback {
-  id String @id @default(uuid())
+  id              String           @id @default(uuid())
+  sessionId       String           @unique
+  score           Int
+  communication   Int
+  technical      Int
+  confidence     Int
+  feedback        String
+  strengths       String[]
+  improvements    String[]
+  recommendations String[]
+  createdAt       DateTime         @default(now())
 
-  sessionId String @unique
-
-  score Int
-
-  communication Int
-
-  technical Int
-
-  confidence Int
-
-  feedback String
-
-  createdAt DateTime @default(now())
-
-  session InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  session         InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
 model Notification {

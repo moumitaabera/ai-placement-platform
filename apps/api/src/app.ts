@@ -18,7 +18,8 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import pinoHttp from "pino-http";
 import logger from "./config/logger";
-
+import adminRoutes from "./routes/admin.routes";
+import recruiterRoutes from "./routes/recruiter.routes";
 
 
 const app = express();
@@ -28,12 +29,39 @@ app.use(
   })
 );
 app.use(helmet());
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // such as Postman/server-to-server requests.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(
+        new Error("Not allowed by CORS")
+      );
+    },
     credentials: true,
   })
 );
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -55,6 +83,7 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRoutes);
 
 app.use("/api/student", studentRoutes);
+app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
@@ -78,6 +107,10 @@ app.use(
 app.use(
   "/api/mock-interview",
   mockInterviewRoutes
+);
+app.use(
+  "/api/admin",
+  adminRoutes
 );
 app.use(errorHandler);
 app.use(

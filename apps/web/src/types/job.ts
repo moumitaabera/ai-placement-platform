@@ -7,7 +7,8 @@ export interface Job {
   employmentType: string;
   experienceLevel: string;
   skills: string[];
-  deadline?: string;
+  // deadline?: string;
+  deadline?: string | null;
   createdAt: string;
 }
 

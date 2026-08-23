@@ -8,11 +8,13 @@ import {
 } from "../controllers/auth.controller";
 
 import { authenticate } from "../middleware/auth.middleware";
-import { authorize } from "../middleware/role.middleware";
+// import { authorize } from "../middleware/role.middleware";
 import { validate } from "../middleware/validate.middleware";
 import {
   registerSchema,
   loginSchema,
+  refreshTokenSchema,
+  logoutSchema,
 } from "../validators/auth.validator";
 
 const router = Router();
@@ -69,10 +71,17 @@ router.post(
   login
 );
 
+router.post(
+  "/refresh",
+  validate(refreshTokenSchema),
+  refresh
+);
 
-
-router.post("/refresh", refresh);
-router.post("/logout", logout);
+router.post(
+  "/logout",
+  validate(logoutSchema),
+  logout
+);
 
 // Protected Route
 router.get("/me", authenticate, me);

@@ -211,3 +211,26 @@ export const deleteJob = async (
     message: "Job deleted successfully",
   };
 };
+
+export const getRecruiterJobs = async (userId: string) => {
+  const recruiter = await prisma.recruiterProfile.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (!recruiter) {
+    throw new Error("Recruiter profile not found");
+  }
+
+  const jobs = await prisma.job.findMany({
+    where: {
+      recruiterId: recruiter.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return jobs;
+};

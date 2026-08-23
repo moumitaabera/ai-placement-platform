@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import api from "@/lib/api";
 
 export const getMe = async () => {
   const response = await api.get("/auth/me");

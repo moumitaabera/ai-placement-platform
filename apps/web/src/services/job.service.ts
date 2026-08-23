@@ -39,3 +39,13 @@ export const deleteJob = async (id: string) => {
   const response = await api.delete(`/jobs/${id}`);
   return response.data;
 };
+
+export const getMyJobs = async () => {
+  const response = await api.get("/jobs/my-jobs");
+  return response.data;
+};
+
+export const getMyJobById = async (id: string) => {
+  const response = await api.get(`/jobs/${id}`);
+  return response.data;
+};
