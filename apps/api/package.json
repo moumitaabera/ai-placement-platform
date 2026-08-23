@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "prisma generate && tsc && node -e \"require('fs').cpSync('generated/prisma','dist/generated/prisma',{recursive:true})\"",
+    "build": "prisma generate && tsc && node -e \"const fs=require('fs'); const src=fs.existsSync('src/generated/prisma')?'src/generated/prisma':'generated/prisma'; fs.cpSync(src,'dist/generated/prisma',{recursive:true})\"",
     "start": "node dist/server.js",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -17,7 +17,7 @@
     "@google/genai": "^2.15.0",
     "@prisma/client": "^6.16.2",
     "axios": "^1.19.0",
-    "bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0", 
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
