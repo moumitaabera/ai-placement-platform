@@ -32,16 +32,9 @@ app.use(
   })
 );
 app.use(helmet());
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     credentials: true,
-//   })
-// );
 
 const allowedOrigins = [
   "http://localhost:3000",
-  // process.env.FRONTEND_URL,
   "https://YOUR-FRONTEND.vercel.app",
 ].filter(Boolean);
 
@@ -66,9 +59,20 @@ app.use(
   })
 );
 
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 500,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
+});
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
 
@@ -79,25 +83,7 @@ const authLimiter = rateLimit({
   },
 });
 
-// Global API rate limiter
-// Auth routes are excluded because they have their own stricter limiter below.
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 300,
-  standardHeaders: true,
-  legacyHeaders: false,
-
-  skip: (req) => {
-    return req.originalUrl.startsWith("/api/auth");
-  },
-
-  message: {
-    success: false,
-    message: "Too many requests. Please try again later.",
-  },
-});
-
-app.use(limiter);
+app.use(globalLimiter);
 
 app.use(express.json());
 
