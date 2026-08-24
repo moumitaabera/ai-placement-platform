@@ -53,12 +53,9 @@ export default function DashboardNav() {
   const recruiterNavItems = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Profile", href: "/profile" },
-    { label: "Jobs", href: "/dashboard/jobs" },
-    { label: "Applications", href: "/dashboard/applications" },
-    {
-      label: "Notifications",
-      href: "/dashboard/notifications",
-    },
+    { label: "My Jobs", href: "/dashboard/jobs" },
+    { label: "Create Job", href: "/dashboard/recruiter/jobs/create" },
+    { label: "Notifications", href: "/dashboard/notifications" },
   ];
 
   const adminNavItems = [
