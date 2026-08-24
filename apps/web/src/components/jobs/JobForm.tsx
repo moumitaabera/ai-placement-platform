@@ -1,7 +1,9 @@
 "use client";
+import axios from "axios";
 
 import { useState } from "react";
 import { createJob } from "@/services/job.service";
+import { useRouter } from "next/navigation";
 
 interface JobFormProps {
   initialData?: {
@@ -19,6 +21,9 @@ interface JobFormProps {
 export default function JobForm({
   initialData,
 }: JobFormProps) {
+
+  const router = useRouter();
+
 
   const [loading, setLoading] = useState(false);
 
@@ -48,46 +53,57 @@ export default function JobForm({
   };
 
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  try {
+    setLoading(true);
 
-    try {
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      location: formData.location,
+      salary: formData.salary,
+      employmentType: formData.employmentType,
+      experienceLevel: formData.experienceLevel,
 
-      setLoading(true);
+      // Convert "React, Node, SQL" → ["React", "Node", "SQL"]
+      skills: formData.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean),
 
+      // Convert date → ISO datetime
+      deadline: formData.deadline
+        ? new Date(`${formData.deadline}T23:59:59.000Z`).toISOString()
+        : undefined,
+    };
 
-      await createJob({
-        ...formData,
-        skills: formData.skills
-          .split(",")
-          .map((skill) => skill.trim()),
-      });
+    console.log("Job payload:", payload);
 
+    await createJob(payload);
+
+    alert("Job created successfully!");
+
+    router.push("/dashboard/recruiter/jobs");
+  } catch (error: unknown) {
+    console.error("Job creation error:", error);
+
+    if (axios.isAxiosError(error)) {
+      console.error("Backend response:", error.response?.data);
+      console.error("Status:", error.response?.status);
 
       alert(
-        "Job created successfully!"
+        error.response?.data?.message ||
+        "Failed to create job."
       );
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      alert(
-        "Failed to create job"
-      );
-
-
-    } finally {
-
-      setLoading(false);
-
+    } else {
+      alert("Failed to create job.");
     }
-
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return (
