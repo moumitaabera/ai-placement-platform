@@ -66,14 +66,37 @@ app.use(
   })
 );
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+
+  message: {
+    success: false,
+    message:
+      "Too many authentication attempts. Please try again later.",
+  },
+});
+
+// Global API rate limiter
+// Auth routes are excluded because they have their own stricter limiter below.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+
+  skip: (req) => {
+    return req.originalUrl.startsWith("/api/auth");
+  },
+
   message: {
     success: false,
     message: "Too many requests. Please try again later.",
   },
 });
+
 app.use(limiter);
 
 app.use(express.json());
@@ -84,7 +107,7 @@ app.get("/", (_, res) => {
   });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authLimiter, authRoutes);
 
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
