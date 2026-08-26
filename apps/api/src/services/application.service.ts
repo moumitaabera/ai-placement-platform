@@ -119,16 +119,15 @@ export const applyForJob = async (
   }
 
   // Create application
-  const application =
-    await prisma.application.create({
-      data: {
-        studentId: student.id,
-        jobId,
-        resumeId,
-      },
-    });
+  const application = await prisma.application.create({
+    data: {
+      studentId: student.id,
+      jobId,
+      resumeId,
+    },
+  });
 
-  // Notify recruiter
+  // Create notification for recruiter
   await prisma.notification.create({
     data: {
       userId: job.recruiter.userId,
@@ -136,11 +135,6 @@ export const applyForJob = async (
       message: `A student has applied for your job "${job.title}".`,
     },
   });
-
-  console.log(
-    "RECRUITER NOTIFICATION CREATED FOR:",
-    job.recruiter.userId
-  );
 
   return application;
 };
