@@ -176,6 +176,7 @@ export default function AdminDashboardPage() {
         const token =
           localStorage.getItem("accessToken") ||
           localStorage.getItem("token");
+          console.log("ADMIN TOKEN:", token);
 
         if (!token) {
           router.push("/login");
