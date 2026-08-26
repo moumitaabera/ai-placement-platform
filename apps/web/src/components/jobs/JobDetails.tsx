@@ -532,6 +532,23 @@ export default function JobDetails({
         </div>
       </div>
 
+      {/* Recruiter Actions */}
+{user?.role === "RECRUITER" && (
+  <div className="flex gap-3 pt-4 border-t">
+    <button
+      type="button"
+      onClick={() =>
+        router.push(
+          `/dashboard/recruiter/jobs/${job.id}/applicants`
+        )
+      }
+      className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
+    >
+      View Applicants
+    </button>
+  </div>
+)}
+
       {/* ========================= */}
       {/* Student Apply Button */}
       {/* ========================= */}
