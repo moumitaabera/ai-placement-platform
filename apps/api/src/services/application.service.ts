@@ -1,64 +1,18 @@
 import prisma from "../lib/prisma";
 
-
-// export const applyForJob = async (
-//   userId: string,
-//   jobId: string,
-//   resumeId: string
-// ) => {
-//   const student = await prisma.studentProfile.findUnique({
-//     where: {
-//       userId,
-//     },
-//   });
-
-//   if (!student) {
-//     throw new Error("Student profile not found");
-//   }
-
-//   const job = await prisma.job.findUnique({
-//     where: {
-//       id: jobId,
-//     },
-//   });
-
-//   if (!job) {
-//     throw new Error("Job not found");
-//   }
-
-//   const existingApplication =
-//     await prisma.application.findUnique({
-//       where: {
-//         studentId_jobId: {
-//           studentId: student.id,
-//           jobId,
-//         },
-//       },
-//     });
-
-//   if (existingApplication) {
-//     throw new Error("Already applied to this job");
-//   }
-
-//   return prisma.application.create({
-//     data: {
-//       studentId: student.id,
-//       jobId,
-//       resumeId,
-//     },
-//   });
-// };
-
 export const applyForJob = async (
   userId: string,
   jobId: string,
   resumeId: string
 ) => {
   const student = await prisma.studentProfile.findUnique({
-    where: {
-      userId,
-    },
-  });
+  where: {
+    userId,
+  },
+  include: {
+    user: true,
+  },
+});
 
   if (!student) {
     throw new Error("Student profile not found");
@@ -128,13 +82,13 @@ export const applyForJob = async (
   });
 
   // Create notification for recruiter
-  await prisma.notification.create({
-    data: {
-      userId: job.recruiter.userId,
-      title: "New Job Application",
-      message: `A student has applied for your job "${job.title}".`,
-    },
-  });
+await prisma.notification.create({
+  data: {
+    userId: job.recruiter.userId,
+    title: "New Job Application",
+    message: `${student.user.name} has applied for your job "${job.title}".`,
+  },
+});
 
   return application;
 };
@@ -305,85 +259,3 @@ export const viewResume = async (
 };
 
 
-// export const viewResume = async (resumeId: string) => {
-//   const token = localStorage.getItem("token");
-
-//   const response = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/api/resumes/${resumeId}/view`,
-//     {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     }
-//   );
-
-//   if (!response.ok) {
-//     throw new Error("Failed to view resume");
-//   }
-
-//   return response.blob();
-// };
-
-
-// import prisma from "../lib/prisma";
-// export const applyForJob = async (
-//   userId: string,
-//   jobId: string,
-//   resumeId: string
-// ) => {
-//   const student = await prisma.studentProfile.findUnique({
-//     where: {
-//       userId,
-//     },
-//   });
-
-//   if (!student) {
-//     throw new Error("Student profile not found");
-//   }
-
-//   const job = await prisma.job.findUnique({
-//     where: {
-//       id: jobId,
-//     },
-//     include: {
-//       recruiter: true,
-//     },
-//   });
-
-//   if (!job) {
-//     throw new Error("Job not found");
-//   }
-
-//   const existingApplication =
-//     await prisma.application.findUnique({
-//       where: {
-//         studentId_jobId: {
-//           studentId: student.id,
-//           jobId,
-//         },
-//       },
-//     });
-
-//   if (existingApplication) {
-//     throw new Error("Already applied to this job");
-//   }
-
-//   const application =
-//     await prisma.application.create({
-//       data: {
-//         studentId: student.id,
-//         jobId,
-//         resumeId,
-//       },
-//     });
-
-//   await prisma.notification.create({
-//     data: {
-//       userId: job.recruiter.userId,
-//       title: "New Job Application",
-//       message: `${student.userId} has applied for your job "${job.title}".`,
-//     },
-//   });
-
-//   return application;
-// };
