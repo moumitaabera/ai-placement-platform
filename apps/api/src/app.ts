@@ -59,16 +59,6 @@ app.use(
   })
 );
 
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many requests. Please try again later.",
-  },
-});
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -83,7 +73,7 @@ const authLimiter = rateLimit({
   },
 });
 
-app.use(globalLimiter);
+// app.use(generalLimiter);
 
 app.use(express.json());
 
@@ -93,7 +83,7 @@ app.get("/", (_, res) => {
   });
 });
 
-app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/auth", authRoutes);
 
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);

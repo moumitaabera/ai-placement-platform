@@ -11,6 +11,10 @@ import { authenticate } from "../middleware/auth.middleware";
 // import { authorize } from "../middleware/role.middleware";
 import { validate } from "../middleware/validate.middleware";
 import {
+  generalLimiter,
+  authLimiter,
+} from "../middleware/rateLimit.middleware";
+import {
   registerSchema,
   loginSchema,
   refreshTokenSchema,
@@ -19,71 +23,35 @@ import {
 
 const router = Router();
 
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new user
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *               - role
- *             properties:
- *               name:
- *                 type: string
- *                 example: Moumita Bera
- *               email:
- *                 type: string
- *                 example: moumita@gmail.com
- *               password:
- *                 type: string
- *                 example: Password123
- *               role:
- *                 type: string
- *                 enum:
- *                   - STUDENT
- *                   - RECRUITER
- *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Validation error
- */
-
 router.post(
-  "/register",
+  "/register", 
+  authLimiter,
   validate(registerSchema),
   register
 );
 
 router.post(
   "/login",
+  authLimiter,
   validate(loginSchema),
   login
 );
 
 router.post(
   "/refresh",
+  generalLimiter,
   validate(refreshTokenSchema),
   refresh
 );
 
 router.post(
   "/logout",
+  generalLimiter,
   validate(logoutSchema),
   logout
 );
 
 // Protected Route
-router.get("/me", authenticate, me);
+router.get("/me", generalLimiter,authenticate, me);
 
 export default router;
