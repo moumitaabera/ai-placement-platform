@@ -68,6 +68,9 @@ export const applyForJob = async (
     where: {
       id: jobId,
     },
+    include: {
+      recruiter: true,
+    },
   });
 
   if (!job) {
@@ -84,9 +87,7 @@ export const applyForJob = async (
     const deadline = new Date(job.deadline);
 
     if (deadline.getTime() <= Date.now()) {
-      throw new Error(
-        "Application deadline has passed"
-      );
+      throw new Error("Application deadline has passed");
     }
   }
 
@@ -102,9 +103,7 @@ export const applyForJob = async (
     });
 
   if (existingApplication) {
-    throw new Error(
-      "Already applied to this job"
-    );
+    throw new Error("Already applied to this job");
   }
 
   // Make sure resume belongs to this student
@@ -116,18 +115,34 @@ export const applyForJob = async (
   });
 
   if (!resume) {
-    throw new Error(
-      "Invalid resume selected"
-    );
+    throw new Error("Invalid resume selected");
   }
 
-  return prisma.application.create({
+  // Create application
+  const application =
+    await prisma.application.create({
+      data: {
+        studentId: student.id,
+        jobId,
+        resumeId,
+      },
+    });
+
+  // Notify recruiter
+  await prisma.notification.create({
     data: {
-      studentId: student.id,
-      jobId,
-      resumeId,
+      userId: job.recruiter.userId,
+      title: "New Job Application",
+      message: `A student has applied for your job "${job.title}".`,
     },
   });
+
+  console.log(
+    "RECRUITER NOTIFICATION CREATED FOR:",
+    job.recruiter.userId
+  );
+
+  return application;
 };
 
 export const getMyApplications = async (
