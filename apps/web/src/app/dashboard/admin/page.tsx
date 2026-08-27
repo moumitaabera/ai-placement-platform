@@ -1221,17 +1221,47 @@ export default function AdminDashboardPage() {
                         <td className="px-6 py-4">
                           {application.resume
                             ?.fileUrl ? (
-                            <a
-                              href={
-                                application.resume
-                                  .fileUrl
-                              }
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm font-semibold text-blue-600 hover:underline"
-                            >
-                              View Resume
-                            </a>
+                            <button
+  type="button"
+  onClick={async () => {
+    if (!application.resume) return;
+
+    try {
+      const response = await api.get(
+        `/resume/${application.resume.id}/view?applicationId=${application.id}`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const pdfUrl = URL.createObjectURL(
+        response.data
+      );
+
+      window.open(
+        pdfUrl,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfUrl);
+      }, 60000);
+    } catch (error) {
+      console.error(
+        "Failed to open resume:",
+        error
+      );
+
+      alert(
+        "Failed to open resume. Please try again."
+      );
+    }
+  }}
+  className="text-sm font-semibold text-blue-600 hover:underline"
+>
+  View Resume
+</button>
                           ) : (
                             <span className="text-sm text-gray-400">
                               —
