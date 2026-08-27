@@ -25,6 +25,7 @@ export default function RecruiterDashboard({
 
   return (
     <div className="mt-10 space-y-10">
+
       {/* ============================= */}
       {/* JOB STATISTICS */}
       {/* ============================= */}
@@ -35,33 +36,71 @@ export default function RecruiterDashboard({
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="border rounded-2xl p-6 bg-white shadow-sm">
-            <p className="text-sm text-gray-500">Total Jobs</p>
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
+            <p className="text-sm text-gray-500">
+              Total Jobs
+            </p>
+
             <p className="text-3xl font-bold mt-2">
               {stats.totalJobs}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-6 bg-white shadow-sm">
-            <p className="text-sm text-gray-500">Active Jobs</p>
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
+            <p className="text-sm text-gray-500">
+              Active Jobs
+            </p>
+
             <p className="text-3xl font-bold mt-2 text-green-600">
               {stats.activeJobs}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-6 bg-white shadow-sm">
-            <p className="text-sm text-gray-500">Closed Jobs</p>
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
+            <p className="text-sm text-gray-500">
+              Closed Jobs
+            </p>
+
             <p className="text-3xl font-bold mt-2 text-gray-600">
               {stats.closedJobs}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-6 bg-white shadow-sm">
-            <p className="text-sm text-gray-500">Draft Jobs</p>
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
+            <p className="text-sm text-gray-500">
+              Draft Jobs
+            </p>
+
             <p className="text-3xl font-bold mt-2 text-orange-500">
               {stats.draftJobs}
             </p>
-          </div>
+          </button>
+
         </div>
       </section>
 
@@ -75,7 +114,14 @@ export default function RecruiterDashboard({
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          <div className="border rounded-2xl p-5 bg-white shadow-sm">
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
             <p className="text-sm text-gray-500">
               Applications
             </p>
@@ -83,9 +129,15 @@ export default function RecruiterDashboard({
             <p className="text-3xl font-bold mt-2">
               {stats.totalApplications}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-5 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
             <p className="text-sm text-gray-500">
               Shortlisted
             </p>
@@ -93,9 +145,15 @@ export default function RecruiterDashboard({
             <p className="text-3xl font-bold mt-2 text-blue-600">
               {stats.shortlisted}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-5 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
             <p className="text-sm text-gray-500">
               Interviews
             </p>
@@ -103,9 +161,15 @@ export default function RecruiterDashboard({
             <p className="text-3xl font-bold mt-2 text-purple-600">
               {stats.interviews}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-5 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
             <p className="text-sm text-gray-500">
               Hired
             </p>
@@ -113,9 +177,15 @@ export default function RecruiterDashboard({
             <p className="text-3xl font-bold mt-2 text-green-600">
               {stats.hired}
             </p>
-          </div>
+          </button>
 
-          <div className="border rounded-2xl p-5 bg-white shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/dashboard/recruiter/jobs")
+            }
+            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
+          >
             <p className="text-sm text-gray-500">
               Rejected
             </p>
@@ -123,7 +193,8 @@ export default function RecruiterDashboard({
             <p className="text-3xl font-bold mt-2 text-red-600">
               {stats.rejected}
             </p>
-          </div>
+          </button>
+
         </div>
       </section>
 
@@ -137,6 +208,7 @@ export default function RecruiterDashboard({
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
           {/* Manage Jobs */}
 
           <button
@@ -228,67 +300,185 @@ export default function RecruiterDashboard({
               Check your latest recruitment updates.
             </p>
           </button>
+
         </div>
       </section>
 
       {/* ============================= */}
-      {/* RECRUITER WORKFLOW */}
+      {/* RECRUITMENT WORKFLOW */}
+      {/* READ-ONLY / NON-CLICKABLE */}
       {/* ============================= */}
 
       <section>
         <div className="border rounded-2xl p-6 bg-white shadow-sm">
-          <h2 className="text-xl font-bold text-gray-900">
-            Recruitment Workflow
-          </h2>
 
-          <p className="text-gray-500 text-sm mt-2">
-            Manage your recruitment process from job
-            creation to hiring.
-          </p>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Recruitment Workflow
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-sm font-semibold">
-                1. Create Job
+            <p className="text-gray-500 text-sm mt-2">
+              Track your recruitment journey from job
+              creation to successful hiring.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+
+            {/* ============================= */}
+            {/* 1. CREATE JOB */}
+            {/* ============================= */}
+
+            <div className="rounded-2xl border bg-gray-50 p-5">
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500">
+                  STEP 01
+                </span>
+
+                <span className="text-xl">
+                  💼
+                </span>
+              </div>
+
+              <p className="text-sm font-semibold mt-4">
+                Create Job
+              </p>
+
+              <p className="text-3xl font-bold mt-2">
+                {stats.totalJobs}
               </p>
 
               <p className="text-xs text-gray-500 mt-1">
-                Publish a new opportunity.
+                Jobs Created
               </p>
+
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-sm font-semibold">
-                2. Review Applicants
+            {/* ============================= */}
+            {/* 2. REVIEW APPLICANTS */}
+            {/* ============================= */}
+
+            <div className="rounded-2xl border bg-gray-50 p-5">
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500">
+                  STEP 02
+                </span>
+
+                <span className="text-xl">
+                  👥
+                </span>
+              </div>
+
+              <p className="text-sm font-semibold mt-4">
+                Review Applicants
+              </p>
+
+              <p className="text-3xl font-bold mt-2">
+                {stats.totalApplications}
               </p>
 
               <p className="text-xs text-gray-500 mt-1">
-                Check applications and resumes.
+                Applicants
               </p>
+
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-sm font-semibold">
-                3. Shortlist
+            {/* ============================= */}
+            {/* 3. SHORTLIST */}
+            {/* ============================= */}
+
+            <div className="rounded-2xl border bg-gray-50 p-5">
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500">
+                  STEP 03
+                </span>
+
+                <span className="text-xl">
+                  ⭐
+                </span>
+              </div>
+
+              <p className="text-sm font-semibold mt-4">
+                Shortlist
+              </p>
+
+              <p className="text-3xl font-bold mt-2">
+                {stats.shortlisted}
               </p>
 
               <p className="text-xs text-gray-500 mt-1">
-                Move suitable candidates forward.
+                Candidates Shortlisted
               </p>
+
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-sm font-semibold">
-                4. Hire
+            {/* ============================= */}
+            {/* 4. INTERVIEW */}
+            {/* ============================= */}
+
+            <div className="rounded-2xl border bg-gray-50 p-5">
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500">
+                  STEP 04
+                </span>
+
+                <span className="text-xl">
+                  🎤
+                </span>
+              </div>
+
+              <p className="text-sm font-semibold mt-4">
+                Interview
+              </p>
+
+              <p className="text-3xl font-bold mt-2">
+                {stats.interviews}
               </p>
 
               <p className="text-xs text-gray-500 mt-1">
-                Update the selected candidate status.
+                Interviews Scheduled
               </p>
+
             </div>
+
+            {/* ============================= */}
+            {/* 5. HIRE */}
+            {/* ============================= */}
+
+            <div className="rounded-2xl border bg-gray-50 p-5">
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-gray-500">
+                  STEP 05
+                </span>
+
+                <span className="text-xl">
+                  🎉
+                </span>
+              </div>
+
+              <p className="text-sm font-semibold mt-4">
+                Hire
+              </p>
+
+              <p className="text-3xl font-bold mt-2">
+                {stats.hired}
+              </p>
+
+              <p className="text-xs text-gray-500 mt-1">
+                Candidates Hired
+              </p>
+
+            </div>
+
           </div>
         </div>
       </section>
+
     </div>
   );
 }
