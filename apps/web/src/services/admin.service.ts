@@ -1,7 +1,5 @@
 import api from "@/lib/api";
 
-const API_URL = "http://localhost:5000/api";
-
 export interface AdminUser {
   id: string;
   name: string;
@@ -19,17 +17,7 @@ interface AdminUsersResponse {
 }
 
 export const getAdminUsers = async (): Promise<AdminUser[]> => {
-  const token = localStorage.getItem("accessToken");
-
-  const response = await api.get<AdminUsersResponse>(
-    `${API_URL}/admin/users`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await api.get<AdminUsersResponse>("/admin/users");
 
   return response.data.data;
 };
-

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import api from "@/lib/api";
 
 interface AdminStats {
   totalStudents: number;
@@ -193,47 +193,35 @@ export default function AdminDashboardPage() {
          */
 
         const [
-          statsResponse,
-          usersResponse,
-          jobsResponse,
-          applicationsResponse,
-        ] = await Promise.all([
-          axios.get<AdminStatsResponse>(
-            "http://localhost:5000/api/admin/stats",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          ),
+  statsResponse,
+  usersResponse,
+  jobsResponse,
+  applicationsResponse,
+] = await Promise.all([
+  api.get<AdminStatsResponse>("/admin/stats", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
 
-          axios.get<AdminUsersResponse>(
-            "http://localhost:5000/api/admin/users",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          ),
+  api.get<AdminUsersResponse>("/admin/users", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
 
-          axios.get<AdminJobsResponse>(
-            "http://localhost:5000/api/admin/jobs",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          ),
+  api.get<AdminJobsResponse>("/admin/jobs", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
 
-          axios.get<AdminApplicationsResponse>(
-            "http://localhost:5000/api/admin/applications",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          ),
-        ]);
+  api.get<AdminApplicationsResponse>("/admin/applications", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
+]);
 
         /*
          * =========================
@@ -296,36 +284,20 @@ export default function AdminDashboardPage() {
         setApplications(
           applicationsResponse.data.data
         );
-      } catch (err: unknown) {
-        console.error(
-          "Admin dashboard error:",
-          err
-        );
+        } catch (err: unknown) {
+  console.error(
+    "Admin dashboard error:",
+    err
+  );
 
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 401) {
-            setError(
-              "Authentication failed."
-            );
-          } else if (
-            err.response?.status === 403
-          ) {
-            setError(
-              "You do not have permission to access the admin dashboard."
-            );
-          } else {
-            setError(
-              err.response?.data?.message ||
-                "Failed to load admin dashboard."
-            );
-          }
-        } else if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(
-            "Failed to load admin dashboard."
-          );
-        }
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError(
+      "Failed to load admin dashboard."
+    );
+  }
+      
       } finally {
         setLoading(false);
       }
@@ -376,15 +348,14 @@ export default function AdminDashboardPage() {
         return;
       }
 
-      const response =
-        await axios.delete(
-          `http://localhost:5000/api/admin/users/${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      const response = await api.delete(
+  `/admin/users/${user.id}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
       if (!response.data.success) {
         throw new Error(
@@ -442,23 +413,19 @@ export default function AdminDashboardPage() {
           "User deleted successfully"
       );
     } catch (err: unknown) {
-      console.error(
-        "Delete user error:",
-        err
-      );
+  console.error(
+    "Delete user error:",
+    err
+  );
 
-      if (axios.isAxiosError(err)) {
-        setError(
-          err.response?.data?.message ||
-            "Failed to delete user."
-        );
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError(
-          "Failed to delete user."
-        );
-      }
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError(
+      "Failed to delete user."
+    );
+  }
+
     } finally {
       setDeletingUserId(null);
     }

@@ -13,6 +13,7 @@ import { authenticate } from "../middleware/auth.middleware";
 import { authorize } from "../middleware/role.middleware";
 
 const router = Router();
+console.log("🔥 ADMIN ROUTER LOADED");
 
 /*
  * Admin Statistics
