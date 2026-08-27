@@ -36,9 +36,29 @@ export default function LoginForm() {
         router.push("/dashboard");
       }
     } catch (error: unknown) {
-      console.error(error);
-      alert("Login failed!");
-    }
+  console.error(error);
+
+  if (
+    error &&
+    typeof error === "object" &&
+    "response" in error
+  ) {
+    const axiosError = error as {
+      response?: {
+        data?: {
+          message?: string;
+        };
+      };
+    };
+
+    alert(
+      axiosError.response?.data?.message ||
+        "Login failed!"
+    );
+  } else {
+    alert("Login failed!");
+  }
+}
   };
 
   return (
