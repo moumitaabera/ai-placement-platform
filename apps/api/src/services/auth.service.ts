@@ -81,7 +81,7 @@ export const loginUser = async (
   );
 
   if (!match) {
-    throw new Error("Invalid credentials");
+    throw new Error("Wrong password");
   }
 
   const accessToken = generateAccessToken(user.id, user.role);
