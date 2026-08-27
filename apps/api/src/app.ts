@@ -35,7 +35,9 @@ app.use(helmet());
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://YOUR-FRONTEND.vercel.app",
+  "https://ai-placement-platform-theta.vercel.app",
+  "https://ai-placement-platform-git-main-moumita-beras-projects.vercel.app",
+  "https://ai-placement-platform-d5je9t348-moumita-beras-projects.vercel.app",
 ].filter(Boolean);
 
 app.use(
@@ -50,6 +52,7 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
+      console.log("❌ CORS blocked origin:", origin);
 
       return callback(
         new Error("Not allowed by CORS")
@@ -111,6 +114,7 @@ app.use(
   "/api/mock-interview",
   mockInterviewRoutes
 );
+console.log("🔥 ADMIN ROUTES REGISTERED");
 app.use(
   "/api/admin",
   adminRoutes
