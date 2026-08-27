@@ -105,98 +105,80 @@ export default function RecruiterDashboard({
       </section>
 
       {/* ============================= */}
-      {/* APPLICATION STATISTICS */}
-      {/* ============================= */}
+{/* APPLICATION STATISTICS */}
+{/* ============================= */}
 
-      <section>
-        <h2 className="text-2xl font-bold text-gray-900 mb-5">
-          Application Overview
-        </h2>
+<section>
+  <h2 className="text-2xl font-bold text-gray-900 mb-5">
+    Application Overview
+  </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard/recruiter/jobs")
-            }
-            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-          >
-            <p className="text-sm text-gray-500">
-              Applications
-            </p>
+    {/* Applications */}
 
-            <p className="text-3xl font-bold mt-2">
-              {stats.totalApplications}
-            </p>
-          </button>
+    <div className="border rounded-2xl p-5 bg-white shadow-sm cursor-default">
+      <p className="text-sm text-gray-500">
+        Applications
+      </p>
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard/recruiter/jobs")
-            }
-            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-          >
-            <p className="text-sm text-gray-500">
-              Shortlisted
-            </p>
+      <p className="text-3xl font-bold mt-2">
+        {stats.totalApplications}
+      </p>
+    </div>
 
-            <p className="text-3xl font-bold mt-2 text-blue-600">
-              {stats.shortlisted}
-            </p>
-          </button>
+    {/* Shortlisted */}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard/recruiter/jobs")
-            }
-            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-          >
-            <p className="text-sm text-gray-500">
-              Interviews
-            </p>
+    <div className="border rounded-2xl p-5 bg-white shadow-sm cursor-default">
+      <p className="text-sm text-gray-500">
+        Shortlisted
+      </p>
 
-            <p className="text-3xl font-bold mt-2 text-purple-600">
-              {stats.interviews}
-            </p>
-          </button>
+      <p className="text-3xl font-bold mt-2 text-blue-600">
+        {stats.shortlisted}
+      </p>
+    </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard/recruiter/jobs")
-            }
-            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-          >
-            <p className="text-sm text-gray-500">
-              Hired
-            </p>
+    {/* Interviews */}
 
-            <p className="text-3xl font-bold mt-2 text-green-600">
-              {stats.hired}
-            </p>
-          </button>
+    <div className="border rounded-2xl p-5 bg-white shadow-sm cursor-default">
+      <p className="text-sm text-gray-500">
+        Interviews
+      </p>
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard/recruiter/jobs")
-            }
-            className="text-left border rounded-2xl p-5 bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition"
-          >
-            <p className="text-sm text-gray-500">
-              Rejected
-            </p>
+      <p className="text-3xl font-bold mt-2 text-purple-600">
+        {stats.interviews}
+      </p>
+    </div>
 
-            <p className="text-3xl font-bold mt-2 text-red-600">
-              {stats.rejected}
-            </p>
-          </button>
+    {/* Hired */}
 
-        </div>
-      </section>
+    <div className="border rounded-2xl p-5 bg-white shadow-sm cursor-default">
+      <p className="text-sm text-gray-500">
+        Hired
+      </p>
+
+      <p className="text-3xl font-bold mt-2 text-green-600">
+        {stats.hired}
+      </p>
+    </div>
+
+    {/* Rejected */}
+
+    <div className="border rounded-2xl p-5 bg-white shadow-sm cursor-default">
+      <p className="text-sm text-gray-500">
+        Rejected
+      </p>
+
+      <p className="text-3xl font-bold mt-2 text-red-600">
+        {stats.rejected}
+      </p>
+    </div>
+
+  </div>
+</section>
+
+     
 
       {/* ============================= */}
       {/* QUICK ACTIONS */}
