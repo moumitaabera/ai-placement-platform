@@ -287,90 +287,178 @@ export default function DashboardPage() {
           </div>
 
           {/* ============================= */}
-          {/* RECENT APPLICATIONS + NOTIFICATIONS */}
-          {/* ============================= */}
+{/* RECENT APPLICATIONS + NOTIFICATIONS */}
+{/* ============================= */}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
 
-            {/* RECENT APPLICATIONS */}
+  {/* RECENT APPLICATIONS */}
 
-            <div className="border rounded-2xl p-6 bg-white shadow-sm">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="text-xl font-bold">
-                    Recent Applications
-                  </h2>
+  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="flex items-start justify-between gap-4 mb-6">
+      <div>
+        <h2 className="text-xl font-bold text-gray-900">
+          Recent Applications
+        </h2>
 
-                  <p className="text-gray-500 text-sm mt-1">
-                    Your latest job applications.
+        <p className="text-sm text-gray-500 mt-1">
+          Your latest job applications.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          router.push("/dashboard/applications")
+        }
+        className="shrink-0 text-sm font-semibold text-gray-600 hover:text-gray-900 hover:underline transition"
+      >
+        View All
+      </button>
+    </div>
+
+    {applications.length === 0 ? (
+      <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 py-10 text-center">
+        <div className="text-2xl mb-2">
+          📄
+        </div>
+
+        <p className="text-sm text-gray-500">
+          No applications yet.
+        </p>
+
+        <button
+          type="button"
+          onClick={() =>
+            router.push("/dashboard/jobs")
+          }
+          className="mt-4 rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition"
+        >
+          Browse Jobs
+        </button>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        {applications
+          .slice(0, 3)
+          .map((application) => (
+            <div
+              key={application.id}
+              className="group rounded-xl border border-gray-200 p-4 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-gray-900 truncate">
+                    {application.job?.title ??
+                      "Job Application"}
+                  </h3>
+
+                  <p className="text-sm text-gray-500 mt-1 truncate">
+                    {application.job?.companyName ??
+                      application.job?.company ??
+                      "Company"}
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    router.push(
-                      "/dashboard/applications"
-                    )
-                  }
-                  className="text-sm font-semibold hover:underline"
-                >
-                  View All
-                </button>
+                <span className="shrink-0 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                  {application.status ?? "Applied"}
+                </span>
               </div>
-
-              {applications.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="text-gray-500">
-                    No applications yet.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      router.push(
-                        "/dashboard/jobs"
-                      )
-                    }
-                    className="mt-4 rounded-xl bg-black px-4 py-2 text-white text-sm font-semibold"
-                  >
-                    Browse Jobs
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {applications
-                    .slice(0, 3)
-                    .map((application) => (
-                      <div
-                        key={application.id}
-                        className="border rounded-xl p-4"
-                      >
-                        <div className="flex items-center justify-between gap-4">
-                          <div>
-                            <h3 className="font-semibold">
-                              {application.job?.title ??
-                                "Job Application"}
-                            </h3>
-
-                            <p className="text-sm text-gray-500 mt-1">
-                              {application.job
-                                ?.companyName ??
-                                application.job?.company ??
-                                "Company"}
-                            </p>
-                          </div>
-
-                          <span className="px-3 py-1 rounded-full bg-gray-100 text-xs font-medium">
-                            {application.status ??
-                              "Applied"}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )}
             </div>
+          ))}
+      </div>
+    )}
+  </div>
+
+  {/* RECENT NOTIFICATIONS */}
+
+  <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="flex items-start justify-between gap-4 mb-6">
+      <div>
+        <h2 className="text-xl font-bold text-gray-900">
+          Recent Notifications
+        </h2>
+
+        <p className="text-sm text-gray-500 mt-1">
+          Stay updated with your activity.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          router.push("/dashboard/notifications")
+        }
+        className="shrink-0 text-sm font-semibold text-gray-600 hover:text-gray-900 hover:underline transition"
+      >
+        View All
+      </button>
+    </div>
+
+    {notifications.length === 0 ? (
+      <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 py-10 text-center">
+        <div className="text-2xl mb-2">
+          🔔
+        </div>
+
+        <p className="text-sm text-gray-500">
+          No notifications yet.
+        </p>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        {notifications
+          .slice(0, 3)
+          .map((notification) => {
+            const read =
+              notification.read ??
+              notification.isRead ??
+              false;
+
+            return (
+              <div
+                key={notification.id}
+                className={`rounded-xl border p-4 transition-all duration-200 ${
+                  !read
+                    ? "border-gray-200 bg-gray-50"
+                    : "border-gray-200 bg-white"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      {!read && (
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-blue-500" />
+                      )}
+
+                      <h3 className="font-semibold text-gray-900 truncate">
+                        {notification.title ??
+                          "Notification"}
+                      </h3>
+                    </div>
+
+                    <p className="text-sm text-gray-600 mt-1 leading-6">
+                      {notification.message ??
+                        "You have a new notification."}
+                    </p>
+                  </div>
+
+                  {!read && (
+                    <span className="shrink-0 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+                      New
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+      </div>
+    )}
+  </div>
+
+</div>
+
+          
 
             {/* RECENT NOTIFICATIONS */}
 
@@ -449,7 +537,6 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
-          </div>
 
           {/* ============================= */}
           {/* QUICK ACTIONS */}

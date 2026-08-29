@@ -505,10 +505,8 @@ export default function JobDetails({
         <strong>Deadline:</strong>{" "}
 
         {job.deadline
-          ? new Date(
-              job.deadline
-            ).toLocaleDateString()
-          : "N/A"}
+  ? job.deadline.split("T")[0]
+  : "N/A"}
       </p>
 
       {/* ========================= */}

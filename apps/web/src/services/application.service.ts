@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import { getAccessToken } from "@/lib/auth";
 
 export interface ApplyJobPayload {
   jobId: string;
@@ -52,10 +53,14 @@ export const viewResume = async (
   resumeId: string,
   applicationId: string
 ) => {
-  const token = localStorage.getItem("token");
+  const token = getAccessToken();
+
+  if (!token) {
+    throw new Error("Authentication token not found");
+  }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/resume/${resumeId}/view?applicationId=${applicationId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/resume/${resumeId}/view?applicationId=${applicationId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -64,6 +69,12 @@ export const viewResume = async (
   );
 
   if (!response.ok) {
+    console.error(
+      "View resume failed:",
+      response.status,
+      response.statusText
+    );
+
     throw new Error("Failed to view resume");
   }
 
