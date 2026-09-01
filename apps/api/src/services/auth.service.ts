@@ -17,11 +17,17 @@ export const registerUser = async (
   password: string,
   role: "STUDENT" | "RECRUITER"
 ) => {
+
+   console.log("🟣 REGISTER EMAIL:", JSON.stringify(email));
+  console.log("🟣 REGISTER EMAIL LENGTH:", email.length);
+
   const existingUser = await prisma.user.findUnique({
     where: {
       email,
     },
   });
+
+  console.log("🟣 REGISTER USER FOUND:", !!existingUser);
 
   if (existingUser) {
     throw new Error("Email already exists");
@@ -171,12 +177,15 @@ export const forgotPassword = async (
   email: string
 ) => {
   console.log("🔵 Forgot password started:", email);
+   console.log("🔵 FORGOT EMAIL:", JSON.stringify(email));
+  console.log("🔵 FORGOT EMAIL LENGTH:", email.length);
+
   const user = await prisma.user.findUnique({
     where: {
       email,
     },
   });
-  console.log("🟢 User found:", !!user);
+  console.log("🟢 FORGOT USER FOUND:", !!user);
 
   /*
    * Don't reveal whether an email exists.
