@@ -5,8 +5,6 @@ import {
   me,
   refresh,
   logout,
-  forgotPasswordController,
-  resetPasswordController,
 } from "../controllers/auth.controller";
 
 import { authenticate } from "../middleware/auth.middleware";
@@ -21,9 +19,7 @@ import {
   loginSchema,
   refreshTokenSchema,
   logoutSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
-  resetPasswordTokenSchema,
+
 } from "../validators/auth.validator";
 
 const router = Router();
@@ -42,20 +38,6 @@ router.post(
   login
 );
 
-router.post(
-  "/forgot-password",
-  authLimiter,
-  validate(forgotPasswordSchema),
-  forgotPasswordController
-);
-
-router.post(
-  "/reset-password/:token",
-  authLimiter,
-  validate(resetPasswordTokenSchema, "params"),
-  validate(resetPasswordSchema, "body"),
-  resetPasswordController
-);
 
 router.post(
   "/refresh",

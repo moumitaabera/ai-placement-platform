@@ -4,8 +4,7 @@ import {
   loginUser,
   refreshAccessToken,
   logoutUser,
-  forgotPassword,
-  resetPassword,
+
 } from "../services/auth.service";
 
 import prisma from "../lib/prisma";
@@ -132,74 +131,3 @@ export const logout = async (
   }
 };
 
-export const forgotPasswordController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { email } = req.body;
-
-    await forgotPassword(email);
-
-    /*
-     * Always return the same message,
-     * whether the email exists or not.
-     */
-    res.json({
-      success: true,
-      message:
-        "If an account exists with this email, a password reset link has been sent.",
-    });
-  } catch (error: any) {
-    console.error(
-      "Forgot password error:",
-      error
-    );
-
-    res.status(500).json({
-      success: false,
-      message:
-        "Unable to process password reset request.",
-    });
-  }
-};
-
-export const resetPasswordController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { token } = req.params;
-    const { password } = req.body;
-
-    if (!token || Array.isArray(token)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid reset token.",
-      });
-    }
-
-    await resetPassword(
-      token,
-      password
-    );
-
-    res.json({
-      success: true,
-      message:
-        "Password reset successfully. You can now login with your new password.",
-    });
-  } catch (error: any) {
-    console.error(
-      "Reset password error:",
-      error
-    );
-
-    res.status(400).json({
-      success: false,
-      message:
-        error.message ||
-        "Failed to reset password.",
-    });
-  }
-};

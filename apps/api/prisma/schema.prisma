@@ -22,7 +22,6 @@ model User {
   createdNotifications Notification[]
   recruiterProfile     RecruiterProfile?
   refreshTokens        RefreshToken[]
-  passwordResetTokens PasswordResetToken[]
   studentProfile       StudentProfile?
 }
 
@@ -35,18 +34,7 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model PasswordResetToken {
-  id        String   @id @default(uuid())
-  token     String   @unique
-  userId    String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
 
-   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([expiresAt])
-}
 
 model StudentProfile {
   id                String             @id @default(uuid())
