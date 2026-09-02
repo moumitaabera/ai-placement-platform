@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import { useState } from "react";
@@ -75,7 +72,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md space-y-5"
+      className="w-full space-y-5"
     >
       {/* Error Message */}
       {error && (
@@ -161,7 +158,7 @@ export default function LoginForm() {
 
       {/* Register */}
       <p className="text-center text-sm text-gray-600">
-        Dont have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link
           href="/register"
           className="font-semibold text-black underline underline-offset-4 hover:text-gray-600 transition"
