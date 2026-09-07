@@ -16,10 +16,12 @@ export const recruiterStats = async (
       success: true,
       data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error
+          ? error.message
+          : "Failed to fetch recruiter dashboard",
     });
   }
 };
@@ -36,10 +38,12 @@ export const studentStats = async (
       success: true,
       data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error
+          ? error.message
+          : "Failed to fetch student dashboard",
     });
   }
 };

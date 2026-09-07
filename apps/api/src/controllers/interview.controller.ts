@@ -38,10 +38,12 @@ export const generateQuestions = async (
       data: questions,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
-      success: false,
-      message: error.message,
+      message:
+  error instanceof Error
+    ? error.message
+    : "Failed to generate interview questions",
     });
   }
 };
@@ -81,10 +83,13 @@ export const startInterviewController = async (
       data: result,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message:
+  error instanceof Error
+    ? error.message
+    : "Failed to start interview",
     });
   }
 };
@@ -111,10 +116,13 @@ export const getInterviewSessionController =
         data: session,
       });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       res.status(404).json({
         success: false,
-        message: error.message,
+        message:
+  error instanceof Error
+    ? error.message
+    : "Failed to fetch interview session",
       });
     }
   };
@@ -147,7 +155,7 @@ export const submitInterviewController = async (
         "Interview submitted successfully",
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(
       "Submit interview error:",
       error
@@ -156,8 +164,9 @@ export const submitInterviewController = async (
     return res.status(500).json({
       success: false,
       message:
-        error?.message ||
-        "Interview submission failed",
+  error instanceof Error
+    ? error.message
+    : "Interview submission failed",
     });
   }
 };
@@ -217,7 +226,7 @@ export const getInterviewResultController = async (
     });
 
 
-  } catch(error){
+  } catch(error : unknown){
 
     console.error(
       "Get interview result error:",

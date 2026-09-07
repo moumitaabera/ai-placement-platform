@@ -56,9 +56,11 @@ export const registerUser = async (
     },
   });
 
-  const { password: _, ...safeUser } = user;
+  const safeUser = Object.fromEntries(
+  Object.entries(user).filter(([key]) => key !== "password")
+);
 
-  return safeUser;
+return safeUser;
 };
 
 
@@ -105,7 +107,9 @@ await prisma.refreshToken.create({
   },
 });
 
-const { password: _, ...safeUser } = user;
+const safeUser = Object.fromEntries(
+  Object.entries(user).filter(([key]) => key !== "password")
+);
 
 return {
   user: safeUser,

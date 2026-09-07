@@ -32,8 +32,8 @@ const parseGeminiJSON = (text: string) => {
 
   try {
     return JSON.parse(cleaned);
-  } catch (error) {
-    console.error("❌ Gemini JSON parsing failed");
+  } catch {
+    console.error("❌ Gemini JSON parsing failed")
     console.error("Raw Gemini response:");
     console.error(text);
     console.error("Cleaned response:");
@@ -379,7 +379,7 @@ export const getInterviewSession = async (
 export const submitInterview = async (
   userId: string,
   sessionId: string,
-  answers: any
+  answers: unknown
 ) => {
   console.log(
     "========== SUBMIT INTERVIEW START =========="

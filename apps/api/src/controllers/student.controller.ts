@@ -96,10 +96,13 @@ export const getProfile = async (
       success: true,
       data: profile,
     });
-  } catch (error: any) {
+    } catch (error: unknown) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch profile",
     });
   }
 };

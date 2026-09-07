@@ -19,12 +19,15 @@ export const analyzeMyResume = async (
       message: "Resume analyzed successfully",
       data: analysis,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(500).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to analyze resume",
+  });
+}
 };
 export const getMyResumeAnalysis = async (
   req: AuthRequest,
@@ -42,10 +45,13 @@ export const getMyResumeAnalysis = async (
       success: true,
       data: analysis,
     });
-  } catch (error: any) {
-    res.status(404).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(404).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Resume analysis not found",
+  });
+}
 };

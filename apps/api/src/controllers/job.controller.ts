@@ -83,12 +83,15 @@ export const getJobs = async (
       data: result.jobs,
       pagination: result.pagination,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(500).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch jobs",
+  });
+}
 };
     
 
@@ -106,12 +109,15 @@ const job = await getJobById(jobId);
       success: true,
       data: job,
     });
-  } catch (error: any) {
-    res.status(404).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(404).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Job not found",
+  });
+}
 };
 
 export const update = async (
@@ -135,12 +141,15 @@ export const update = async (
       message: "Job updated successfully",
       data: job,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(400).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to update job",
+  });
+}
 };
 
 export const remove = async (
@@ -157,12 +166,15 @@ export const remove = async (
       success: true,
       ...result,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(400).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to delete job",
+  });
+}
 };
 
 export const myJobs = async (
@@ -176,10 +188,13 @@ export const myJobs = async (
       success: true,
       data: jobs,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(400).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch recruiter jobs",
+  });
+}
 };

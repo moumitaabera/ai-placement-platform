@@ -207,7 +207,7 @@ export const updateApplicationStatus = async (
         id: applicationId,
       },
       data: {
-        status: status as any,
+        status,
       },
       include: {
         job: true,

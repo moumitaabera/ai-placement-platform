@@ -86,7 +86,7 @@ app.get("/", (_, res) => {
   });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authLimiter, authRoutes);
 
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);

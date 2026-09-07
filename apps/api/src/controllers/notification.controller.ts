@@ -16,12 +16,15 @@ export const notifications = async (
       success: true,
       data,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(500).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch notifications",
+  });
+}
 };
 
 export const markAsRead = async (
@@ -40,11 +43,14 @@ export const markAsRead = async (
       message: "Notification marked as read",
       data: notification,
     });
-  } catch (error: any) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(400).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to mark notification as read",
+  });
+}
 };
 

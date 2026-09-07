@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
+
 import { ApiError } from "../utils/ApiError";
 
 export const errorHandler = (
   err: Error,
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({

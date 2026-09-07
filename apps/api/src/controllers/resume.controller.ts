@@ -1,11 +1,9 @@
-
-
-
 import axios from "axios";
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import streamifier from "streamifier";
 import cloudinary from "../config/cloudinary";
+import type { UploadApiResponse } from "cloudinary";
 import prisma from "../lib/prisma";
 
 import {
@@ -49,7 +47,7 @@ export const removeResume = async (
       success: true,
       message: "Resume deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(
       "DELETE RESUME ERROR:",
       error
@@ -57,7 +55,10 @@ export const removeResume = async (
 
     return res.status(400).json({
       success: false,
-      message: error.message,
+      message:
+  error instanceof Error
+    ? error.message
+    : "Failed to delete resume",
     });
   }
 };
@@ -94,28 +95,34 @@ export const uploadResume = async (
       });
     }
 
-    const result: any =
-      await new Promise((resolve, reject) => {
-        const uploadStream =
-          cloudinary.uploader.upload_stream(
-            {
-              folder:
-                "ai-placement-platform/resumes",
-              resource_type: "raw",
-            },
-            (error, result) => {
-              if (error) {
-                return reject(error);
-              }
+   const result: UploadApiResponse =
+  await new Promise((resolve, reject) => {
+    const uploadStream =
+      cloudinary.uploader.upload_stream(
+        {
+          folder:
+            "ai-placement-platform/resumes",
+          resource_type: "raw",
+        },
+        (error, result) => {
+          if (error) {
+            return reject(error);
+          }
 
-              resolve(result);
-            }
-          );
+          if (!result) {
+            return reject(
+              new Error("Cloudinary upload failed")
+            );
+          }
 
-        streamifier
-          .createReadStream(file.buffer)
-          .pipe(uploadStream);
-      });
+          resolve(result);
+        }
+      );
+
+    streamifier
+      .createReadStream(file.buffer)
+      .pipe(uploadStream);
+  });
 
     const resume =
       await prisma.resume.create({
@@ -133,7 +140,7 @@ export const uploadResume = async (
         "Resume uploaded successfully",
       data: resume,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(
       "UPLOAD RESUME ERROR:",
       error
@@ -141,7 +148,10 @@ export const uploadResume = async (
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message:
+  error instanceof Error
+    ? error.message
+    : "Failed to upload resume",
     });
   }
 };
@@ -163,7 +173,7 @@ export const getResumes = async (
       success: true,
       data: resumes,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(
       "GET RESUMES ERROR:",
       error
@@ -171,7 +181,10 @@ export const getResumes = async (
 
     return res.status(400).json({
       success: false,
-      message: error.message,
+      message:
+  error instanceof Error
+    ? error.message
+    : "Failed to fetch resumes",
     });
   }
 };
@@ -220,30 +233,35 @@ export const viewResume = async (
     );
 
     return res.send(response.data);
-  } catch (error: any) {
-    console.error(
-      "VIEW RESUME ERROR:",
-      error
-    );
+  } catch (error: unknown) {
+  console.error(
+    "VIEW RESUME ERROR:",
+    error
+  );
 
-    if (error.message === "Unauthorized") {
-      return res.status(403).json({
-        success: false,
-        message:
-          "You are not authorized to view this resume",
-      });
-    }
+  const message =
+    error instanceof Error
+      ? error.message
+      : "Failed to view resume";
 
-    if (error.message === "Resume not found") {
-      return res.status(404).json({
-        success: false,
-        message: "Resume not found",
-      });
-    }
-
-    return res.status(500).json({
+  if (message === "Unauthorized") {
+    return res.status(403).json({
       success: false,
-      message: "Failed to view resume",
+      message:
+        "You are not authorized to view this resume",
     });
   }
+
+  if (message === "Resume not found") {
+    return res.status(404).json({
+      success: false,
+      message: "Resume not found",
+    });
+  }
+
+  return res.status(500).json({
+    success: false,
+    message: "Failed to view resume",
+  });
+}
 };

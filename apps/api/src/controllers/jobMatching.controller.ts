@@ -26,10 +26,13 @@ export const matchJob = async (
       success: true,
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  } catch (error: unknown) {
+  res.status(500).json({
+    success: false,
+    message:
+      error instanceof Error
+        ? error.message
+        : "Failed to match resume with job",
+  });
+}
 };

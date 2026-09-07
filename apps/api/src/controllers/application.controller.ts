@@ -1,6 +1,110 @@
-import { Request, Response } from "express";
+// import { Request, Response } from "express";
+// import { AuthRequest } from "../middleware/auth.middleware";
+// import { applyForJob, getMyApplications, getApplicantsForJob, updateApplicationStatus,} from "../services/application.service";
+
+// export const apply = async (
+//   req: AuthRequest,
+//   res: Response
+// ) => {
+//   try {
+//     const { jobId, resumeId } = req.body;
+
+//     const application = await applyForJob(
+//       req.userId!,
+//       jobId,
+//       resumeId
+//     );
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Applied successfully",
+//       data: application,
+//     });
+//   } catch (error: any) {
+//     res.status(400).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// export const myApplications = async (
+//   req: AuthRequest,
+//   res: Response
+// ) => {
+//   try {
+//     const applications =
+//       await getMyApplications(req.userId!);
+
+//     res.json({
+//       success: true,
+//       data: applications,
+//     });
+//   } catch (error: any) {
+//     res.status(400).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// export const applicants = async (
+//   req: AuthRequest,
+//   res: Response
+// ) => {
+//   try {
+//     const applications =
+//       await getApplicantsForJob(
+//         req.userId!,
+//         req.params.jobId as string
+//       );
+
+//     res.json({
+//       success: true,
+//       data: applications,
+//     });
+//   } catch (error: any) {
+//     res.status(400).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+// export const updateStatus = async (
+//   req: AuthRequest,
+//   res: Response
+// ) => {
+//   try {
+//     const application =
+//       await updateApplicationStatus(
+//         req.userId!,
+//         req.params.id as string,
+//         req.body.status
+//       );
+
+//     res.json({
+//       success: true,
+//       message: "Application status updated successfully",
+//       data: application,
+//     });
+//   } catch (error: any) {
+//     res.status(400).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+
+import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { applyForJob, getMyApplications, getApplicantsForJob, updateApplicationStatus,} from "../services/application.service";
+import {
+  applyForJob,
+  getMyApplications,
+  getApplicantsForJob,
+  updateApplicationStatus,
+} from "../services/application.service";
 
 export const apply = async (
   req: AuthRequest,
@@ -20,10 +124,10 @@ export const apply = async (
       message: "Applied successfully",
       data: application,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : "Failed to apply for job",
     });
   }
 };
@@ -40,10 +144,10 @@ export const myApplications = async (
       success: true,
       data: applications,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : "Failed to fetch applications",
     });
   }
 };
@@ -63,13 +167,14 @@ export const applicants = async (
       success: true,
       data: applications,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : "Failed to fetch applicants",
     });
   }
 };
+
 export const updateStatus = async (
   req: AuthRequest,
   res: Response
@@ -87,10 +192,10 @@ export const updateStatus = async (
       message: "Application status updated successfully",
       data: application,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error instanceof Error ? error.message : "Failed to update application status",
     });
   }
 };
