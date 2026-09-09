@@ -96,28 +96,35 @@ export default function RegisterForm() {
 
       router.push("/login");
     } catch (error: unknown) {
-      console.error(
-        "Registration error:",
-        error
+  console.error("Registration error:", error);
+
+  if (axios.isAxiosError(error)) {
+    // Request reached the backend, but backend returned an error
+    if (error.response) {
+      const backendMessage = error.response.data?.message;
+
+      setError(
+        backendMessage ||
+          error.response.data?.error ||
+          "Registration failed. Please try again."
       );
-
-      if (axios.isAxiosError(error)) {
-        const backendMessage =
-          error.response?.data?.message;
-
-        setError(
-          backendMessage ||
-            error.response?.data?.error ||
-            "Registration failed. Please try again."
-        );
-      } else {
-        setError(
-          "Something went wrong. Please try again."
-        );
-      }
-    } finally {
-      setLoading(false);
+    } else if (error.request) {
+      // Request was sent, but no response was received
+      setError(
+        "Unable to connect to the server. Please check your internet connection and try again."
+      );
+    } else {
+      // Something went wrong while creating the request
+      setError(
+        "Unable to send the request. Please try again."
+      );
     }
+  } else {
+    setError("Something went wrong. Please try again.");
+  }
+} finally {
+  setLoading(false);
+}
   };
 
   return (
